@@ -91,6 +91,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Yash Gaur** - [@yashgaur05](https://github.com/yashgaur05)
 
+<<<<<<< HEAD
 ---
 
 ⭐ **Star this repository if you found it helpful!**
+=======
+>>>>>>> 7d3bdf89c60ab461d52e5698682b0e1e7491f9f1
