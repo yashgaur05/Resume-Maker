@@ -65,39 +65,199 @@ export default function ResumeBuilder() {
   const [skills, setSkills] = useState<string[]>([]);
 
   // Sample data for demonstration
-  const loadSampleData = () => {
-    setPersonalInfo({
-      fullName: 'John Doe',
-      email: 'john.doe@email.com',
-      phone: '+1 (555) 123-4567',
-      location: 'San Francisco, CA',
-      website: 'https://johndoe.dev',
-      linkedin: 'https://linkedin.com/in/johndoe'
-    });
-    setSummary('Experienced software developer with 5+ years of expertise in full-stack development. Passionate about creating scalable web applications and leading cross-functional teams to deliver high-quality solutions.');
-    setExperiences([
-      {
-        id: '1',
-        company: 'Tech Corp',
-        position: 'Senior Software Engineer',
-        startDate: '2021',
-        endDate: '2024',
-        current: true,
-        description: 'Led development of microservices architecture'
-      }
-    ]);
-    setEducation([
-      {
-        id: '1',
-        institution: 'University of Technology',
-        degree: 'Bachelor of Science',
-        field: 'Computer Science',
-        startDate: '2016',
-        endDate: '2020',
-        gpa: '3.8'
-      }
-    ]);
-    setSkills(['JavaScript', 'React', 'Node.js', 'Python', 'AWS', 'Docker']);
+  const sampleDataSets = {
+    software: {
+      personalInfo: {
+        fullName: 'Sarah Chen',
+        email: 'sarah.chen@email.com',
+        phone: '+1 (555) 123-4567',
+        location: 'San Francisco, CA',
+        website: 'https://sarahchen.dev',
+        linkedin: 'https://linkedin.com/in/sarahchen'
+      },
+      summary: 'Senior Software Engineer with 7+ years of experience building scalable web applications and leading engineering teams. Expertise in full-stack development, cloud architecture, and agile methodologies. Proven track record of delivering high-impact products that serve millions of users.',
+      experiences: [
+        {
+          id: '1',
+          company: 'Google',
+          position: 'Senior Software Engineer',
+          startDate: 'Jan 2022',
+          endDate: '',
+          current: true,
+          description: '• Led development of core search infrastructure serving 100M+ daily users\n• Architected microservices using Go and Kubernetes, improving system reliability by 40%\n• Mentored 5 junior engineers and established best practices for code review and testing\n• Collaborated with product managers to define technical requirements for new features'
+        },
+        {
+          id: '2',
+          company: 'Meta (Facebook)',
+          position: 'Software Engineer',
+          startDate: 'Jun 2019',
+          endDate: 'Dec 2021',
+          current: false,
+          description: '• Built and maintained React-based user interfaces for Facebook Marketplace\n• Optimized database queries reducing page load times by 35%\n• Implemented A/B testing framework used by 20+ product teams\n• Participated in on-call rotation and incident response for critical systems'
+        },
+        {
+          id: '3',
+          company: 'Startup Inc.',
+          position: 'Full Stack Developer',
+          startDate: 'Aug 2017',
+          endDate: 'May 2019',
+          current: false,
+          description: '• Developed MVP for fintech startup from concept to 10,000 active users\n• Built RESTful APIs using Node.js and PostgreSQL\n• Implemented CI/CD pipelines using Jenkins and Docker\n• Worked directly with founders to prioritize features and technical debt'
+        }
+      ],
+      education: [
+        {
+          id: '1',
+          institution: 'Stanford University',
+          degree: 'Master of Science',
+          field: 'Computer Science',
+          startDate: '2015',
+          endDate: '2017',
+          gpa: '3.9'
+        },
+        {
+          id: '2',
+          institution: 'UC Berkeley',
+          degree: 'Bachelor of Science',
+          field: 'Computer Science',
+          startDate: '2011',
+          endDate: '2015',
+          gpa: '3.7'
+        }
+      ],
+      skills: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'Python', 'Go', 'AWS', 'Kubernetes', 'Docker', 'PostgreSQL', 'MongoDB', 'GraphQL', 'Git', 'Agile/Scrum']
+    },
+    business: {
+      personalInfo: {
+        fullName: 'Michael Rodriguez',
+        email: 'michael.rodriguez@email.com',
+        phone: '+1 (555) 987-6543',
+        location: 'New York, NY',
+        website: 'https://michaelrodriguez.com',
+        linkedin: 'https://linkedin.com/in/michaelrodriguez'
+      },
+      summary: 'Results-driven Business Development Manager with 8+ years of experience in B2B sales and strategic partnerships. Proven track record of exceeding revenue targets by 25%+ and building lasting client relationships. Expert in market analysis, contract negotiation, and cross-functional team leadership.',
+      experiences: [
+        {
+          id: '1',
+          company: 'Salesforce',
+          position: 'Senior Business Development Manager',
+          startDate: 'Mar 2021',
+          endDate: '',
+          current: true,
+          description: '• Manage $15M+ portfolio of enterprise accounts, consistently exceeding quarterly targets by 30%\n• Developed strategic partnerships with 3 major technology vendors, generating $5M in new revenue\n• Led cross-functional team of 8 members to launch new product line in EMEA market\n• Implemented CRM optimization strategies that improved sales team efficiency by 45%'
+        },
+        {
+          id: '2',
+          company: 'HubSpot',
+          position: 'Business Development Manager',
+          startDate: 'Jan 2019',
+          endDate: 'Feb 2021',
+          current: false,
+          description: '• Generated $8M+ in new business through strategic outbound campaigns\n• Built and maintained relationships with C-level executives at Fortune 500 companies\n• Collaborated with marketing team to develop lead generation strategies\n• Achieved 120% of annual quota for two consecutive years'
+        },
+        {
+          id: '3',
+          company: 'Oracle',
+          position: 'Sales Representative',
+          startDate: 'Jun 2016',
+          endDate: 'Dec 2018',
+          current: false,
+          description: '• Managed territory of 150+ SMB accounts with annual revenue of $3M+\n• Conducted product demonstrations and technical presentations to key stakeholders\n• Negotiated contracts and pricing with procurement teams\n• Mentored 3 new sales representatives on best practices and company processes'
+        }
+      ],
+      education: [
+        {
+          id: '1',
+          institution: 'Wharton School, University of Pennsylvania',
+          degree: 'Master of Business Administration',
+          field: 'Finance & Strategy',
+          startDate: '2014',
+          endDate: '2016',
+          gpa: '3.8'
+        },
+        {
+          id: '2',
+          institution: 'University of Michigan',
+          degree: 'Bachelor of Arts',
+          field: 'Economics',
+          startDate: '2010',
+          endDate: '2014',
+          gpa: '3.6'
+        }
+      ],
+      skills: ['B2B Sales', 'Strategic Partnerships', 'CRM (Salesforce)', 'Contract Negotiation', 'Market Analysis', 'Lead Generation', 'Account Management', 'Financial Modeling', 'Presentation Skills', 'Team Leadership']
+    },
+    marketing: {
+      personalInfo: {
+        fullName: 'Emily Johnson',
+        email: 'emily.johnson@email.com',
+        phone: '+1 (555) 456-7890',
+        location: 'Los Angeles, CA',
+        website: 'https://emilyjohnson.marketing',
+        linkedin: 'https://linkedin.com/in/emilyjohnson'
+      },
+      summary: 'Creative Digital Marketing Manager with 6+ years of experience driving brand growth through data-driven campaigns. Expertise in social media marketing, content strategy, and performance analytics. Successfully increased brand engagement by 200%+ and generated $10M+ in attributed revenue.',
+      experiences: [
+        {
+          id: '1',
+          company: 'Nike',
+          position: 'Senior Digital Marketing Manager',
+          startDate: 'Feb 2022',
+          endDate: '',
+          current: true,
+          description: '• Lead digital marketing strategy for Nike Running division ($500M+ annual revenue)\n• Managed $5M annual advertising budget across Google Ads, Facebook, and Instagram\n• Increased social media engagement by 250% through innovative content campaigns\n• Collaborated with creative teams to develop award-winning video content'
+        },
+        {
+          id: '2',
+          company: 'Spotify',
+          position: 'Digital Marketing Manager',
+          startDate: 'Aug 2020',
+          endDate: 'Jan 2022',
+          current: false,
+          description: '• Developed and executed marketing campaigns for Spotify Premium subscriptions\n• Increased conversion rates by 40% through A/B testing and optimization\n• Managed influencer partnerships with 50+ content creators\n• Analyzed campaign performance using Google Analytics and internal tools'
+        },
+        {
+          id: '3',
+          company: 'Startup Media Co.',
+          position: 'Marketing Specialist',
+          startDate: 'May 2018',
+          endDate: 'Jul 2020',
+          current: false,
+          description: '• Created content marketing strategy that increased organic traffic by 300%\n• Managed social media accounts with 100K+ followers across platforms\n• Designed and implemented email marketing campaigns with 25% open rates\n• Coordinated with design team to create visual assets for campaigns'
+        }
+      ],
+      education: [
+        {
+          id: '1',
+          institution: 'UCLA',
+          degree: 'Master of Science',
+          field: 'Marketing Analytics',
+          startDate: '2016',
+          endDate: '2018',
+          gpa: '3.9'
+        },
+        {
+          id: '2',
+          institution: 'USC',
+          degree: 'Bachelor of Arts',
+          field: 'Communications',
+          startDate: '2012',
+          endDate: '2016',
+          gpa: '3.7'
+        }
+      ],
+      skills: ['Digital Marketing', 'Social Media Marketing', 'Google Ads', 'Facebook Ads', 'Content Strategy', 'SEO/SEM', 'Google Analytics', 'A/B Testing', 'Email Marketing', 'Influencer Marketing', 'Adobe Creative Suite', 'Marketing Automation']
+    }
+  };
+
+  const loadSampleData = (type: 'software' | 'business' | 'marketing' = 'software') => {
+    const data = sampleDataSets[type];
+    setPersonalInfo(data.personalInfo);
+    setSummary(data.summary);
+    setExperiences(data.experiences);
+    setEducation(data.education);
+    setSkills(data.skills);
   };
 
   const templates: Template[] = [
@@ -111,51 +271,79 @@ export default function ResumeBuilder() {
     {
       id: 'classic',
       name: 'Classic',
-      description: 'Traditional and professional layout',
+      description: 'Traditional black & white professional layout',
       preview: '📋',
       category: 'Traditional'
     },
     {
+      id: 'executive',
+      name: 'Executive',
+      description: 'Premium corporate design for C-level positions',
+      preview: '👔',
+      category: 'Executive'
+    },
+    {
+      id: 'professional',
+      name: 'Professional',
+      description: 'Standard business format used by Fortune 500',
+      preview: '💼',
+      category: 'Business'
+    },
+    {
+      id: 'ats-friendly',
+      name: 'ATS Friendly',
+      description: 'Optimized for Applicant Tracking Systems',
+      preview: '🤖',
+      category: 'ATS'
+    },
+    {
+      id: 'harvard',
+      name: 'Harvard Style',
+      description: 'Academic format preferred by top universities',
+      preview: '🏛️',
+      category: 'Academic'
+    },
+    {
+      id: 'tech',
+      name: 'Tech',
+      description: 'Developer-focused with clean code aesthetics',
+      preview: '💻',
+      category: 'Technology'
+    },
+    {
+      id: 'consulting',
+      name: 'Consulting',
+      description: 'McKinsey/BCG style for consulting roles',
+      preview: '📊',
+      category: 'Consulting'
+    },
+    {
+      id: 'banking',
+      name: 'Banking',
+      description: 'Conservative design for financial services',
+      preview: '🏦',
+      category: 'Finance'
+    },
+    {
       id: 'creative',
       name: 'Creative',
-      description: 'Bold and artistic design for creative fields',
+      description: 'Bold design for creative and design roles',
       preview: '🎭',
       category: 'Creative'
     },
     {
       id: 'minimal',
       name: 'Minimal',
-      description: 'Simple and elegant with lots of white space',
+      description: 'Clean Scandinavian-inspired design',
       preview: '⚪',
       category: 'Simple'
     },
     {
-      id: 'professional',
-      name: 'Professional',
-      description: 'Corporate style perfect for business roles',
-      preview: '💼',
-      category: 'Business'
-    },
-    {
-      id: 'academic',
-      name: 'Academic',
-      description: 'Scholarly design for academic positions',
-      preview: '🎓',
-      category: 'Academic'
-    },
-    {
-      id: 'tech',
-      name: 'Tech',
-      description: 'Developer-focused with modern typography',
-      preview: '💻',
-      category: 'Technology'
-    },
-    {
-      id: 'executive',
-      name: 'Executive',
-      description: 'Premium look for senior positions',
-      preview: '👔',
-      category: 'Executive'
+      id: 'legal',
+      name: 'Legal',
+      description: 'Formal layout for law firms and legal roles',
+      preview: '⚖️',
+      category: 'Legal'
     }
   ];
 
@@ -379,12 +567,26 @@ export default function ResumeBuilder() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-xl md:text-2xl font-bold text-gray-900">Personal Information</h2>
-        <button
-          onClick={loadSampleData}
-          className="btn-secondary text-sm"
-        >
-          📝 Load Sample Data
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => loadSampleData('software')}
+            className="btn-secondary text-sm"
+          >
+            💻 Tech Sample
+          </button>
+          <button
+            onClick={() => loadSampleData('business')}
+            className="btn-secondary text-sm"
+          >
+            💼 Business Sample
+          </button>
+          <button
+            onClick={() => loadSampleData('marketing')}
+            className="btn-secondary text-sm"
+          >
+            📈 Marketing Sample
+          </button>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -472,28 +674,42 @@ export default function ResumeBuilder() {
   const renderTemplateStep = () => (
     <div className="space-y-6">
       <h2 className="text-xl md:text-2xl font-bold text-gray-900">Choose Template</h2>
-      <p className="text-gray-600">Select a template that best fits your style and industry</p>
+      <p className="text-gray-600">Select a professional template that best fits your industry and career level</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Template Categories */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {['All', 'Professional', 'Executive', 'Academic', 'Technology', 'Creative'].map((category) => (
+          <button
+            key={category}
+            className="px-3 py-1 text-sm rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {templates.map((template) => (
           <div
             key={template.id}
-            className={`cursor-pointer border-2 rounded-lg p-4 transition-all hover:shadow-lg ${
+            className={`cursor-pointer border-2 rounded-lg p-4 transition-all hover:shadow-lg transform hover:scale-105 ${
               selectedTemplate === template.id
-                ? 'border-blue-500 bg-blue-50'
+                ? 'border-blue-500 bg-blue-50 shadow-lg'
                 : 'border-gray-200 hover:border-gray-300'
             }`}
             onClick={() => setSelectedTemplate(template.id)}
           >
             <div className="text-center">
-              <div className="text-4xl mb-2">{template.preview}</div>
-              <h3 className="font-semibold text-gray-900">{template.name}</h3>
-              <p className="text-xs text-gray-500 mb-2">{template.category}</p>
-              <p className="text-sm text-gray-600">{template.description}</p>
+              <div className="text-4xl mb-3">{template.preview}</div>
+              <h3 className="font-semibold text-gray-900 mb-1">{template.name}</h3>
+              <span className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full mb-2">
+                {template.category}
+              </span>
+              <p className="text-sm text-gray-600 leading-tight">{template.description}</p>
             </div>
             {selectedTemplate === template.id && (
-              <div className="mt-2 text-center">
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <div className="mt-3 text-center">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   ✓ Selected
                 </span>
               </div>
@@ -502,9 +718,24 @@ export default function ResumeBuilder() {
         ))}
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-semibold text-blue-900 mb-2">Selected Template: {templates.find(t => t.id === selectedTemplate)?.name}</h4>
-        <p className="text-blue-700 text-sm">{templates.find(t => t.id === selectedTemplate)?.description}</p>
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-6">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="text-2xl">{templates.find(t => t.id === selectedTemplate)?.preview}</div>
+          <div>
+            <h4 className="font-semibold text-blue-900">
+              {templates.find(t => t.id === selectedTemplate)?.name} Template
+            </h4>
+            <p className="text-blue-600 text-sm">
+              {templates.find(t => t.id === selectedTemplate)?.category} Category
+            </p>
+          </div>
+        </div>
+        <p className="text-blue-700 text-sm leading-relaxed">
+          {templates.find(t => t.id === selectedTemplate)?.description}
+        </p>
+        <div className="mt-3 text-xs text-blue-600">
+          💡 This template is optimized for {templates.find(t => t.id === selectedTemplate)?.category.toLowerCase()} roles and follows industry best practices.
+        </div>
       </div>
     </div>
   );
@@ -520,12 +751,68 @@ export default function ResumeBuilder() {
         sectionTitle: 'text-lg font-semibold text-blue-800 mb-2'
       },
       classic: {
+        container: 'bg-white border border-gray-400',
+        header: 'border-b-2 border-black p-6 bg-white',
+        name: 'text-2xl font-bold text-black uppercase tracking-wide',
+        contact: 'text-gray-800',
+        section: 'border-b border-gray-400 pb-4 mb-4',
+        sectionTitle: 'text-lg font-bold text-black mb-2 uppercase tracking-wider'
+      },
+      executive: {
+        container: 'bg-white border-2 border-gray-800',
+        header: 'bg-gray-900 text-white p-8',
+        name: 'text-3xl font-bold tracking-wide',
+        contact: 'text-gray-300',
+        section: 'border-b-2 border-gray-800 pb-6 mb-6',
+        sectionTitle: 'text-xl font-bold text-gray-900 mb-3 uppercase tracking-wide'
+      },
+      professional: {
         container: 'bg-white border border-gray-300',
-        header: 'border-b-2 border-gray-800 p-6',
-        name: 'text-2xl font-bold text-gray-900',
+        header: 'bg-gray-100 border-b border-gray-300 p-6',
+        name: 'text-2xl font-semibold text-gray-900',
         contact: 'text-gray-700',
+        section: 'border-b border-gray-200 pb-4 mb-4',
+        sectionTitle: 'text-lg font-semibold text-gray-800 mb-2'
+      },
+      'ats-friendly': {
+        container: 'bg-white',
+        header: 'p-6 border-b border-gray-300',
+        name: 'text-2xl font-bold text-black',
+        contact: 'text-black',
+        section: 'pb-4 mb-4',
+        sectionTitle: 'text-lg font-bold text-black mb-2 uppercase'
+      },
+      harvard: {
+        container: 'bg-white',
+        header: 'p-6 text-center border-b-2 border-red-800',
+        name: 'text-2xl font-serif font-bold text-red-800',
+        contact: 'text-gray-700',
+        section: 'pb-4 mb-4',
+        sectionTitle: 'text-lg font-serif font-bold text-red-800 mb-2'
+      },
+      tech: {
+        container: 'bg-gray-50 border border-gray-300',
+        header: 'bg-gray-900 text-green-400 p-6 font-mono',
+        name: 'text-2xl font-mono font-bold',
+        contact: 'text-green-300 font-mono text-sm',
         section: 'border-b border-gray-300 pb-4 mb-4',
-        sectionTitle: 'text-lg font-semibold text-gray-800 mb-2 uppercase tracking-wide'
+        sectionTitle: 'text-lg font-mono font-bold text-gray-900 mb-2'
+      },
+      consulting: {
+        container: 'bg-white border border-blue-900',
+        header: 'bg-blue-900 text-white p-6',
+        name: 'text-2xl font-bold',
+        contact: 'text-blue-100',
+        section: 'border-b border-blue-200 pb-4 mb-4',
+        sectionTitle: 'text-lg font-bold text-blue-900 mb-2'
+      },
+      banking: {
+        container: 'bg-white border-2 border-gray-600',
+        header: 'bg-white border-b-2 border-gray-600 p-6',
+        name: 'text-2xl font-serif font-bold text-gray-900',
+        contact: 'text-gray-700',
+        section: 'border-b border-gray-400 pb-4 mb-4',
+        sectionTitle: 'text-lg font-serif font-semibold text-gray-900 mb-2'
       },
       creative: {
         container: 'bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200',
@@ -537,11 +824,19 @@ export default function ResumeBuilder() {
       },
       minimal: {
         container: 'bg-white',
-        header: 'p-6',
+        header: 'p-6 border-b border-gray-200',
         name: 'text-2xl font-light text-gray-900',
         contact: 'text-gray-600',
         section: 'pb-4 mb-4',
         sectionTitle: 'text-lg font-light text-gray-800 mb-2'
+      },
+      legal: {
+        container: 'bg-white border-2 border-black',
+        header: 'bg-white border-b-2 border-black p-6',
+        name: 'text-2xl font-serif font-bold text-black text-center',
+        contact: 'text-black text-center',
+        section: 'border-b border-black pb-4 mb-4',
+        sectionTitle: 'text-lg font-serif font-bold text-black mb-2 text-center'
       }
     };
     return styles[templateId as keyof typeof styles] || styles.modern;
@@ -598,10 +893,14 @@ export default function ResumeBuilder() {
                 {experiences.map((exp) => (
                   <div key={exp.id}>
                     <h3 className="font-semibold">{exp.position || 'Position'}</h3>
-                    <p className="text-gray-600">{exp.company || 'Company'}</p>
-                    <p className="text-sm text-gray-500">{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</p>
+                    <p className="text-gray-600 font-medium">{exp.company || 'Company'}</p>
+                    <p className="text-sm text-gray-500 italic">{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</p>
                     {exp.description && (
-                      <p className="text-sm text-gray-700 mt-1">{exp.description}</p>
+                      <div className="text-sm text-gray-700 mt-2">
+                        {exp.description.split('\n').map((line, index) => (
+                          <p key={index} className="mb-1">{line}</p>
+                        ))}
+                      </div>
                     )}
                   </div>
                 ))}
@@ -744,11 +1043,14 @@ export default function ResumeBuilder() {
                     <div className="mt-4">
                       <label className="form-label">Job Description</label>
                       <textarea
-                        className="form-input h-24"
+                        className="form-input h-32"
                         value={exp.description}
                         onChange={(e) => updateExperience(exp.id, 'description', e.target.value)}
-                        placeholder="Describe your responsibilities and achievements..."
+                        placeholder="• Led development of key features that increased user engagement by 25%&#10;• Managed team of 5 engineers and coordinated with product managers&#10;• Implemented best practices for code review and testing&#10;• Collaborated with cross-functional teams to deliver projects on time"
                       />
+                      <p className="text-xs text-gray-500 mt-1">
+                        💡 Tip: Use bullet points (•) to list your achievements and responsibilities. Start each point with an action verb.
+                      </p>
                     </div>
                   </div>
                 ))}
