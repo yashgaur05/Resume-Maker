@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
+import resumeService, { ResumeData } from '@/services/resumeService';
 
 interface PersonalInfo {
   fullName: string;
@@ -45,6 +46,9 @@ export default function ResumeBuilder() {
   const [selectedTemplate, setSelectedTemplate] = useState('modern');
   const [showPreview, setShowPreview] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
   const resumeRef = useRef<HTMLDivElement>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     fullName: '',
@@ -264,39 +268,110 @@ export default function ResumeBuilder() {
     }
   };
 
-  const saveResumeData = () => {
+  const saveResumeData = async () => {
+    if (!personalInfo.fullName || !personalInfo.email) {
+      alert('Please fill in your name and email before saving.');
+      return;
+    }
+
+    setIsSaving(true);
+
     const resumeData = {
       personalInfo,
       summary,
       experiences,
       education,
       skills,
-      selectedTemplate,
-      currentStep
+      selectedTemplate
     };
-    localStorage.setItem('resumeData', JSON.stringify(resumeData));
-    alert('Resume data saved successfully!');
-  };
 
-  const loadResumeData = () => {
     try {
-      const savedData = localStorage.getItem('resumeData');
-      if (savedData) {
-        const data = JSON.parse(savedData);
-        setPersonalInfo(data.personalInfo || {});
-        setSummary(data.summary || '');
-        setExperiences(data.experiences || []);
-        setEducation(data.education || []);
-        setSkills(data.skills || []);
-        setSelectedTemplate(data.selectedTemplate || 'modern');
-        setCurrentStep(data.currentStep || 1);
-        alert('Resume data loaded successfully!');
+      let result;
+
+      if (currentResumeId) {
+        // Update existing resume
+        result = await resumeService.updateResume(currentResumeId, resumeData);
       } else {
-        alert('No saved resume data found.');
+        // Create new resume
+        result = await resumeService.saveResume(resumeData);
+      }
+
+      if (result.success && result.data) {
+        setCurrentResumeId(result.data._id || null);
+        // Also save to localStorage as backup
+        resumeService.saveToLocalStorage({ ...resumeData, currentStep });
+        alert(result.message || 'Resume saved to database successfully!');
+      } else {
+        // Fallback to localStorage if database fails
+        resumeService.saveToLocalStorage({ ...resumeData, currentStep });
+        alert('Database save failed. Saved locally instead: ' + (result.error || 'Unknown error'));
       }
     } catch (error) {
-      console.error('Error loading resume data:', error);
-      alert('Error loading resume data.');
+      console.error('Error saving resume:', error);
+      // Fallback to localStorage
+      resumeService.saveToLocalStorage({ ...resumeData, currentStep });
+      alert('Database save failed. Saved locally instead.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const loadResumeData = async () => {
+    if (!personalInfo.email) {
+      // Try to load from localStorage first
+      const localData = resumeService.loadFromLocalStorage();
+      if (localData) {
+        setPersonalInfo(localData.personalInfo || {});
+        setSummary(localData.summary || '');
+        setExperiences(localData.experiences || []);
+        setEducation(localData.education || []);
+        setSkills(localData.skills || []);
+        setSelectedTemplate(localData.selectedTemplate || 'modern');
+        setCurrentStep(localData.currentStep || 1);
+        alert('Resume data loaded from local storage!');
+      } else {
+        alert('Please enter your email to load saved resumes from database.');
+      }
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const result = await resumeService.getResumesByEmail(personalInfo.email);
+
+      if (result.success && result.data && result.data.length > 0) {
+        const latestResume = result.data[0]; // Get the most recent resume
+        setCurrentResumeId(latestResume._id || null);
+        setPersonalInfo(latestResume.personalInfo);
+        setSummary(latestResume.summary);
+        setExperiences(latestResume.experiences);
+        setEducation(latestResume.education);
+        setSkills(latestResume.skills);
+        setSelectedTemplate(latestResume.selectedTemplate);
+
+        alert(`Resume loaded from database! Found ${result.data.length} saved resume(s).`);
+      } else {
+        // Try localStorage as fallback
+        const localData = resumeService.loadFromLocalStorage();
+        if (localData) {
+          setPersonalInfo(localData.personalInfo || {});
+          setSummary(localData.summary || '');
+          setExperiences(localData.experiences || []);
+          setEducation(localData.education || []);
+          setSkills(localData.skills || []);
+          setSelectedTemplate(localData.selectedTemplate || 'modern');
+          setCurrentStep(localData.currentStep || 1);
+          alert('No database records found. Loaded from local storage instead.');
+        } else {
+          alert('No saved resume data found in database or local storage.');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading resume:', error);
+      alert('Error loading resume from database. Check console for details.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -871,9 +946,14 @@ export default function ResumeBuilder() {
               <p className="text-sm text-gray-600 mb-2">
                 <strong>Template:</strong> {templates.find(t => t.id === selectedTemplate)?.name}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 mb-2">
                 Your resume is ready! You can preview it below or export it as a PDF.
               </p>
+              {currentResumeId && (
+                <p className="text-xs text-green-600">
+                  ✅ Saved to database (ID: {currentResumeId.slice(-8)})
+                </p>
+              )}
             </div>
 
             {renderPreview()}
@@ -902,17 +982,19 @@ export default function ResumeBuilder() {
             <div className="flex items-center gap-2">
               <button
                 onClick={saveResumeData}
-                className="btn-secondary text-xs px-2 py-1 hidden sm:block"
-                title="Save Progress"
+                disabled={isSaving}
+                className="btn-secondary text-xs px-2 py-1 hidden sm:block disabled:opacity-50"
+                title="Save to Database"
               >
-                💾 Save
+                {isSaving ? '⏳ Saving...' : '💾 Save'}
               </button>
               <button
                 onClick={loadResumeData}
-                className="btn-secondary text-xs px-2 py-1 hidden sm:block"
-                title="Load Saved Data"
+                disabled={isLoading}
+                className="btn-secondary text-xs px-2 py-1 hidden sm:block disabled:opacity-50"
+                title="Load from Database"
               >
-                📂 Load
+                {isLoading ? '⏳ Loading...' : '📂 Load'}
               </button>
               <button
                 onClick={() => setShowPreview(!showPreview)}
