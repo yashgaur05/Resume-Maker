@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-lg p-4 md:p-6;
+  }
+
+  .form-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+
+  .template-card {
+    @apply cursor-pointer border-2 rounded-lg p-4 transition-all hover:shadow-lg transform hover:scale-105;
+  }
+
+  .template-card.selected {
+    @apply border-blue-500 bg-blue-50 shadow-lg;
+  }
+
+  .template-card:not(.selected) {
+    @apply border-gray-200 hover:border-gray-300;
+  }
+
+  .progress-step {
+    @apply flex flex-col items-center cursor-pointer min-w-0 flex-shrink-0 px-1 transition-all duration-200;
+  }
+
+  .progress-step.active {
+    @apply text-blue-600 transform scale-110;
+  }
+
+  .progress-step.inactive {
+    @apply text-gray-400;
+  }
+
+  .progress-circle {
+    @apply w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-bold transition-all duration-200;
+  }
+
+  .progress-circle.active {
+    @apply bg-blue-600 text-white shadow-lg;
+  }
+
+  .progress-circle.inactive {
+    @apply bg-gray-200 text-gray-500;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Print styles for PDF export */
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-break {
+    page-break-before: always;
+  }
+}
+
+/* PDF Resume specific styles */
+.print-resume {
+  font-family: 'Times New Roman', serif !important;
+  background: white !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.print-resume * {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.print-resume h1,
+.print-resume h2,
+.print-resume h3,
+.print-resume h4 {
+  page-break-after: avoid;
+}
+
+.print-resume .section {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
