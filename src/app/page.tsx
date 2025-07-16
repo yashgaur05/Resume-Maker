@@ -20,7 +20,7 @@ export default function HomePage() {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl">🎨</span>
-                  <span><strong>8 Professional Templates</strong> - Modern, Classic, Creative, Minimal, Professional, Academic, Tech, Executive</span>
+                  <span><strong>12 Professional Templates</strong> - Modern, Classic, Executive, ATS-Friendly, Harvard, Tech, Consulting, Banking, Legal, and more</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl">📝</span>
@@ -52,12 +52,17 @@ export default function HomePage() {
               </div>
             </div>
             
-            <div className="mt-8">
+            <div className="mt-8 space-y-4">
               <Link href="/builder">
-                <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-200">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-200 w-full sm:w-auto">
                   Start Building Your Resume
                 </button>
               </Link>
+              <div className="text-center">
+                <Link href="/templates" className="text-blue-600 hover:text-blue-700 text-sm underline">
+                  View All Templates →
+                </Link>
+              </div>
             </div>
           </div>
           
@@ -74,11 +79,47 @@ export default function HomePage() {
               </div>
               <div className="bg-white p-4 rounded-lg shadow">
                 <div className="text-2xl mb-2">3️⃣</div>
-                <p className="text-sm">Choose from 8 templates</p>
+                <p className="text-sm">Choose from 12+ templates</p>
               </div>
               <div className="bg-white p-4 rounded-lg shadow">
                 <div className="text-2xl mb-2">4️⃣</div>
-                <p className="text-sm">Export as PDF</p>
+                <p className="text-sm">Export as PDF/Word</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Developer Section */}
+          <div className="mt-12">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="text-4xl">👨‍💻</div>
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-gray-900">Meet the Developer</h3>
+                  <p className="text-blue-600">Creator of this Resume Builder</p>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <h4 className="text-xl font-semibold text-gray-800 mb-2">Yash Gaur</h4>
+                <p className="text-gray-600 mb-4">
+                  Computer Science Engineering student passionate about creating tools that help people succeed in their careers.
+                </p>
+
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <span className="text-lg">📧</span>
+                  <a
+                    href="mailto:theyash968@gmail.com"
+                    className="text-blue-600 hover:text-blue-800 transition-colors font-medium"
+                  >
+                    theyash968@gmail.com
+                  </a>
+                </div>
+
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <p className="text-sm text-blue-800">
+                    💡 <strong>Need help or have feedback?</strong> Feel free to reach out for support, suggestions, or custom features!
+                  </p>
+                </div>
               </div>
             </div>
           </div>

@@ -41,15 +41,62 @@ interface Template {
   category: string;
 }
 
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  technologies: string;
+  link?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+interface Certification {
+  id: string;
+  name: string;
+  issuer: string;
+  date: string;
+  credentialId?: string;
+  link?: string;
+}
+
+interface Award {
+  id: string;
+  title: string;
+  issuer: string;
+  date: string;
+  description?: string;
+}
+
+interface Language {
+  id: string;
+  name: string;
+  proficiency: string;
+}
+
+interface Volunteer {
+  id: string;
+  organization: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+  current: boolean;
+  description: string;
+}
+
 export default function ResumeBuilder() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedTemplate, setSelectedTemplate] = useState('modern');
+  const [selectedTemplate, setSelectedTemplate] = useState('yash-template');
   const [showPreview, setShowPreview] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
   const resumeRef = useRef<HTMLDivElement>(null);
+
+  // Font customization for Yash's template
+  const [fontSize, setFontSize] = useState('medium');
+  const [fontFamily, setFontFamily] = useState('inter');
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     fullName: '',
     email: '',
@@ -63,6 +110,11 @@ export default function ResumeBuilder() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [awards, setAwards] = useState<Award[]>([]);
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [volunteer, setVolunteer] = useState<Volunteer[]>([]);
 
   // Sample data for demonstration
   const sampleDataSets = {
@@ -262,6 +314,13 @@ export default function ResumeBuilder() {
 
   const templates: Template[] = [
     {
+      id: 'yash-template',
+      name: "Yash's Used Template",
+      description: 'Personalized developer template with customizable fonts and export options',
+      preview: '⭐',
+      category: 'Featured'
+    },
+    {
       id: 'modern',
       name: 'Modern',
       description: 'Clean and contemporary design with subtle colors',
@@ -353,8 +412,11 @@ export default function ResumeBuilder() {
     { number: 3, title: 'Experience', icon: '💼' },
     { number: 4, title: 'Education', icon: '🎓' },
     { number: 5, title: 'Skills', icon: '⚡' },
-    { number: 6, title: 'Template', icon: '🎨' },
-    { number: 7, title: 'Preview', icon: '👀' }
+    { number: 6, title: 'Projects', icon: '🚀' },
+    { number: 7, title: 'Certifications', icon: '🏆' },
+    { number: 8, title: 'Additional', icon: '📋' },
+    { number: 9, title: 'Template', icon: '🎨' },
+    { number: 10, title: 'Preview', icon: '👀' }
   ];
 
   const handlePersonalInfoChange = (field: keyof PersonalInfo, value: string) => {
@@ -419,6 +481,119 @@ export default function ResumeBuilder() {
     setSkills(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Project functions
+  const addProject = () => {
+    const newProject: Project = {
+      id: Date.now().toString(),
+      name: '',
+      description: '',
+      technologies: '',
+      link: '',
+      startDate: '',
+      endDate: ''
+    };
+    setProjects(prev => [...prev, newProject]);
+  };
+
+  const updateProject = (id: string, field: keyof Project, value: string) => {
+    setProjects(prev => prev.map(project =>
+      project.id === id ? { ...project, [field]: value } : project
+    ));
+  };
+
+  const removeProject = (id: string) => {
+    setProjects(prev => prev.filter(project => project.id !== id));
+  };
+
+  // Certification functions
+  const addCertification = () => {
+    const newCert: Certification = {
+      id: Date.now().toString(),
+      name: '',
+      issuer: '',
+      date: '',
+      credentialId: '',
+      link: ''
+    };
+    setCertifications(prev => [...prev, newCert]);
+  };
+
+  const updateCertification = (id: string, field: keyof Certification, value: string) => {
+    setCertifications(prev => prev.map(cert =>
+      cert.id === id ? { ...cert, [field]: value } : cert
+    ));
+  };
+
+  const removeCertification = (id: string) => {
+    setCertifications(prev => prev.filter(cert => cert.id !== id));
+  };
+
+  // Award functions
+  const addAward = () => {
+    const newAward: Award = {
+      id: Date.now().toString(),
+      title: '',
+      issuer: '',
+      date: '',
+      description: ''
+    };
+    setAwards(prev => [...prev, newAward]);
+  };
+
+  const updateAward = (id: string, field: keyof Award, value: string) => {
+    setAwards(prev => prev.map(award =>
+      award.id === id ? { ...award, [field]: value } : award
+    ));
+  };
+
+  const removeAward = (id: string) => {
+    setAwards(prev => prev.filter(award => award.id !== id));
+  };
+
+  // Language functions
+  const addLanguage = () => {
+    const newLang: Language = {
+      id: Date.now().toString(),
+      name: '',
+      proficiency: 'Beginner'
+    };
+    setLanguages(prev => [...prev, newLang]);
+  };
+
+  const updateLanguage = (id: string, field: keyof Language, value: string) => {
+    setLanguages(prev => prev.map(lang =>
+      lang.id === id ? { ...lang, [field]: value } : lang
+    ));
+  };
+
+  const removeLanguage = (id: string) => {
+    setLanguages(prev => prev.filter(lang => lang.id !== id));
+  };
+
+  // Volunteer functions
+  const addVolunteer = () => {
+    const newVol: Volunteer = {
+      id: Date.now().toString(),
+      organization: '',
+      role: '',
+      startDate: '',
+      endDate: '',
+      current: false,
+      description: ''
+    };
+    setVolunteer(prev => [...prev, newVol]);
+  };
+
+  const updateVolunteer = (id: string, field: keyof Volunteer, value: string | boolean) => {
+    setVolunteer(prev => prev.map(vol =>
+      vol.id === id ? { ...vol, [field]: value } : vol
+    ));
+  };
+
+  const removeVolunteer = (id: string) => {
+    setVolunteer(prev => prev.filter(vol => vol.id !== id));
+  };
+
   const exportToPDF = async () => {
     if (!resumeRef.current) return;
 
@@ -456,6 +631,83 @@ export default function ResumeBuilder() {
     }
   };
 
+  const exportToWord = async () => {
+    if (!resumeRef.current) return;
+
+    setIsExporting(true);
+
+    try {
+      // Create a simple HTML structure for Word export
+      const resumeContent = resumeRef.current.innerHTML;
+      const wordContent = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>Resume</title>
+          <style>
+            body { font-family: ${fontFamily === 'inter' ? 'Arial, sans-serif' : fontFamily === 'times' ? 'Times New Roman, serif' : fontFamily === 'georgia' ? 'Georgia, serif' : 'Arial, sans-serif'};
+                   font-size: ${fontSize === 'small' ? '10px' : fontSize === 'large' ? '12px' : '11px'};
+                   line-height: 1.2; margin: 0.5in; }
+            h1 { font-size: ${fontSize === 'small' ? '16px' : fontSize === 'large' ? '20px' : '18px'}; color: #2563eb; text-align: center; margin-bottom: 5px; }
+            h2 { font-size: ${fontSize === 'small' ? '12px' : fontSize === 'large' ? '14px' : '13px'}; color: #2563eb; border-bottom: 1px solid #2563eb; margin-top: 8px; margin-bottom: 3px; }
+            .contact-info { text-align: center; margin-bottom: 8px; }
+            .section { margin-bottom: 8px; }
+            .experience-item, .education-item, .project-item { margin-bottom: 5px; }
+            .job-title, .degree-title, .project-title { font-weight: bold; }
+            .company, .institution { font-style: italic; }
+            .date { color: #666; font-size: smaller; }
+            .skills { display: flex; flex-wrap: wrap; gap: 5px; }
+            .skill-tag { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: smaller; }
+          </style>
+        </head>
+        <body>
+          ${resumeContent.replace(/class="[^"]*"/g, '').replace(/style="[^"]*"/g, '')}
+        </body>
+        </html>
+      `;
+
+      const blob = new Blob([wordContent], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${personalInfo.fullName || 'Resume'}_${selectedTemplate}.doc`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      alert('Error generating Word document. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const getFontStyles = () => {
+    if (selectedTemplate !== 'yash-template') return {};
+
+    const fontFamilyMap = {
+      inter: 'Inter, system-ui, -apple-system, sans-serif',
+      times: 'Times New Roman, serif',
+      georgia: 'Georgia, serif',
+      arial: 'Arial, sans-serif',
+      helvetica: 'Helvetica, Arial, sans-serif'
+    };
+
+    const fontSizeMap = {
+      small: { base: '10px', name: '16px', section: '12px' },
+      medium: { base: '11px', name: '18px', section: '13px' },
+      large: { base: '12px', name: '20px', section: '14px' }
+    };
+
+    return {
+      fontFamily: fontFamilyMap[fontFamily as keyof typeof fontFamilyMap] || fontFamilyMap.inter,
+      fontSize: fontSizeMap[fontSize as keyof typeof fontSizeMap]?.base || fontSizeMap.medium.base,
+      nameSize: fontSizeMap[fontSize as keyof typeof fontSizeMap]?.name || fontSizeMap.medium.name,
+      sectionSize: fontSizeMap[fontSize as keyof typeof fontSizeMap]?.section || fontSizeMap.medium.section
+    };
+  };
+
   const saveResumeData = async () => {
     if (!personalInfo.fullName || !personalInfo.email) {
       alert('Please fill in your name and email before saving.');
@@ -470,7 +722,14 @@ export default function ResumeBuilder() {
       experiences,
       education,
       skills,
-      selectedTemplate
+      projects,
+      certifications,
+      awards,
+      languages,
+      volunteer,
+      selectedTemplate,
+      fontSize,
+      fontFamily
     };
 
     try {
@@ -514,7 +773,14 @@ export default function ResumeBuilder() {
         setExperiences(localData.experiences || []);
         setEducation(localData.education || []);
         setSkills(localData.skills || []);
-        setSelectedTemplate(localData.selectedTemplate || 'modern');
+        setProjects(localData.projects || []);
+        setCertifications(localData.certifications || []);
+        setAwards(localData.awards || []);
+        setLanguages(localData.languages || []);
+        setVolunteer(localData.volunteer || []);
+        setSelectedTemplate(localData.selectedTemplate || 'yash-template');
+        setFontSize(localData.fontSize || 'medium');
+        setFontFamily(localData.fontFamily || 'inter');
         setCurrentStep(localData.currentStep || 1);
         alert('Resume data loaded from local storage!');
       } else {
@@ -533,10 +799,17 @@ export default function ResumeBuilder() {
         setCurrentResumeId(latestResume._id || null);
         setPersonalInfo(latestResume.personalInfo);
         setSummary(latestResume.summary);
-        setExperiences(latestResume.experiences);
-        setEducation(latestResume.education);
-        setSkills(latestResume.skills);
+        setExperiences(latestResume.experiences || []);
+        setEducation(latestResume.education || []);
+        setSkills(latestResume.skills || []);
+        setProjects(latestResume.projects || []);
+        setCertifications(latestResume.certifications || []);
+        setAwards(latestResume.awards || []);
+        setLanguages(latestResume.languages || []);
+        setVolunteer(latestResume.volunteer || []);
         setSelectedTemplate(latestResume.selectedTemplate);
+        setFontSize(latestResume.fontSize || 'medium');
+        setFontFamily(latestResume.fontFamily || 'inter');
 
         alert(`Resume loaded from database! Found ${result.data.length} saved resume(s).`);
       } else {
@@ -548,7 +821,14 @@ export default function ResumeBuilder() {
           setExperiences(localData.experiences || []);
           setEducation(localData.education || []);
           setSkills(localData.skills || []);
-          setSelectedTemplate(localData.selectedTemplate || 'modern');
+          setProjects(localData.projects || []);
+          setCertifications(localData.certifications || []);
+          setAwards(localData.awards || []);
+          setLanguages(localData.languages || []);
+          setVolunteer(localData.volunteer || []);
+          setSelectedTemplate(localData.selectedTemplate || 'yash-template');
+          setFontSize(localData.fontSize || 'medium');
+          setFontFamily(localData.fontFamily || 'inter');
           setCurrentStep(localData.currentStep || 1);
           alert('No database records found. Loaded from local storage instead.');
         } else {
@@ -736,6 +1016,50 @@ export default function ResumeBuilder() {
         <div className="mt-3 text-xs text-blue-600">
           💡 This template is optimized for {templates.find(t => t.id === selectedTemplate)?.category.toLowerCase()} roles and follows industry best practices.
         </div>
+
+        {/* Font Customization for Yash's Template */}
+        {selectedTemplate === 'yash-template' && (
+          <div className="mt-6 p-4 bg-white rounded-lg border border-blue-300">
+            <h5 className="font-semibold text-blue-900 mb-4">⭐ Exclusive Customization Options</h5>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="form-label">Font Family</label>
+                <select
+                  className="form-input"
+                  value={fontFamily}
+                  onChange={(e) => setFontFamily(e.target.value)}
+                >
+                  <option value="inter">Inter (Modern)</option>
+                  <option value="times">Times New Roman (Classic)</option>
+                  <option value="georgia">Georgia (Elegant)</option>
+                  <option value="arial">Arial (Clean)</option>
+                  <option value="helvetica">Helvetica (Professional)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="form-label">Font Size</label>
+                <select
+                  className="form-input"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(e.target.value)}
+                >
+                  <option value="small">Small (10px) - Ultra Compact</option>
+                  <option value="medium">Medium (11px) - Compact</option>
+                  <option value="large">Large (12px) - Standard</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-xs text-yellow-800">
+                🎨 <strong>Personalized for Yash:</strong> These customization options are exclusively available for your template.
+                Changes will be reflected in both preview and exports.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -837,6 +1161,14 @@ export default function ResumeBuilder() {
         contact: 'text-black text-center',
         section: 'border-b border-black pb-4 mb-4',
         sectionTitle: 'text-lg font-serif font-bold text-black mb-2 text-center'
+      },
+      'yash-template': {
+        container: 'bg-white border border-gray-300',
+        header: 'bg-white p-3 text-center border-b border-gray-300',
+        name: 'text-xl font-bold text-blue-600 uppercase tracking-wide',
+        contact: 'text-gray-700 text-xs mt-1',
+        section: 'pb-2 mb-2',
+        sectionTitle: 'text-base font-bold text-blue-600 mb-1 uppercase tracking-wide'
       }
     };
     return styles[templateId as keyof typeof styles] || styles.modern;
@@ -844,42 +1176,96 @@ export default function ResumeBuilder() {
 
   const renderPreview = (forPDF = false) => {
     const styles = getTemplateStyles(selectedTemplate);
+    const fontStyles = getFontStyles();
 
     return (
       <div
         ref={forPDF ? resumeRef : null}
         className={`${styles.container} ${forPDF ? 'print-resume' : 'rounded-lg shadow-lg'} overflow-hidden ${forPDF ? 'w-full' : 'max-w-2xl mx-auto'}`}
-        style={forPDF ? {
-          minHeight: '11in',
-          width: '8.5in',
-          margin: '0 auto',
-          backgroundColor: 'white',
-          fontSize: '12px',
-          lineHeight: '1.4'
-        } : {}}
+        style={{
+          ...(forPDF ? {
+            minHeight: '11in',
+            width: '8.5in',
+            margin: '0 auto',
+            backgroundColor: 'white',
+            fontSize: '12px',
+            lineHeight: '1.4'
+          } : {}),
+          ...(selectedTemplate === 'yash-template' ? {
+            fontFamily: fontStyles.fontFamily,
+            fontSize: fontStyles.fontSize,
+            lineHeight: '1.2',
+            padding: forPDF ? '0.3in' : '12px'
+          } : {})
+        }}
       >
         {/* Header */}
-        <div className={styles.header} style={forPDF ? { padding: '24px' } : {}}>
-          <h1 className={styles.name} style={forPDF ? { fontSize: '24px', marginBottom: '8px' } : {}}>
+        <div
+          className={styles.header}
+          style={{
+            ...(forPDF ? { padding: '24px' } : {}),
+            ...(selectedTemplate === 'yash-template' ? { padding: forPDF ? '12px' : '8px' } : {})
+          }}
+        >
+          <h1
+            className={styles.name}
+            style={{
+              ...(forPDF ? { fontSize: '24px', marginBottom: '8px' } : {}),
+              ...(selectedTemplate === 'yash-template' ? { fontSize: fontStyles.nameSize } : {})
+            }}
+          >
             {personalInfo.fullName || 'Your Name'}
           </h1>
-          <div className={`${styles.contact} space-y-1 mt-2`} style={forPDF ? { fontSize: '11px' } : {}}>
-            {personalInfo.email && <div>📧 {personalInfo.email}</div>}
-            {personalInfo.phone && <div>📱 {personalInfo.phone}</div>}
-            {personalInfo.location && <div>📍 {personalInfo.location}</div>}
-            {personalInfo.website && <div>🌐 {personalInfo.website}</div>}
-            {personalInfo.linkedin && <div>💼 {personalInfo.linkedin}</div>}
+          <div className={`${styles.contact} ${selectedTemplate === 'yash-template' ? 'space-y-0' : 'space-y-1'} mt-2`} style={forPDF ? { fontSize: '11px' } : {}}>
+            {selectedTemplate === 'yash-template' ? (
+              // Developer template format - inline contact info
+              <div className="flex flex-wrap justify-center gap-4 text-sm">
+                {personalInfo.email && <span>📧 {personalInfo.email}</span>}
+                {personalInfo.phone && <span>📱 {personalInfo.phone}</span>}
+                {personalInfo.linkedin && <span>💼 LinkedIn: {personalInfo.linkedin.replace('https://linkedin.com/in/', '')}</span>}
+              </div>
+            ) : (
+              // Other templates - vertical contact info
+              <>
+                {personalInfo.email && <div>📧 {personalInfo.email}</div>}
+                {personalInfo.phone && <div>📱 {personalInfo.phone}</div>}
+                {personalInfo.location && <div>📍 {personalInfo.location}</div>}
+                {personalInfo.website && <div>🌐 {personalInfo.website}</div>}
+                {personalInfo.linkedin && <div>💼 {personalInfo.linkedin}</div>}
+              </>
+            )}
           </div>
         </div>
 
-        <div className="p-6 space-y-6" style={forPDF ? { padding: '24px', fontSize: '11px' } : {}}>
+        <div
+          className={selectedTemplate === 'yash-template' ? 'p-3 space-y-3' : 'p-6 space-y-6'}
+          style={{
+            ...(forPDF ? { padding: '24px', fontSize: '11px' } : {}),
+            ...(selectedTemplate === 'yash-template' && forPDF ? { padding: '12px', fontSize: '10px' } : {})
+          }}
+        >
           {/* Summary */}
           {summary && (
-            <div className={styles.section} style={forPDF ? { marginBottom: '16px', paddingBottom: '12px' } : {}}>
-              <h2 className={styles.sectionTitle} style={forPDF ? { fontSize: '14px', marginBottom: '8px' } : {}}>
+            <div
+              className={styles.section}
+              style={{
+                ...(forPDF ? { marginBottom: '16px', paddingBottom: '12px' } : {}),
+                ...(selectedTemplate === 'yash-template' ? { marginBottom: '8px', paddingBottom: '6px' } : {})
+              }}
+            >
+              <h2
+                className={styles.sectionTitle}
+                style={{
+                  ...(forPDF ? { fontSize: '14px', marginBottom: '8px' } : {}),
+                  ...(selectedTemplate === 'yash-template' ? { fontSize: fontStyles.sectionSize, marginBottom: '3px' } : {})
+                }}
+              >
                 Professional Summary
               </h2>
-              <p className="text-gray-700 leading-relaxed" style={forPDF ? { lineHeight: '1.5' } : {}}>
+              <p
+                className={selectedTemplate === 'yash-template' ? 'text-gray-700 leading-tight text-sm' : 'text-gray-700 leading-relaxed'}
+                style={forPDF ? { lineHeight: '1.5' } : {}}
+              >
                 {summary}
               </p>
             </div>
@@ -888,17 +1274,28 @@ export default function ResumeBuilder() {
           {/* Experience */}
           {experiences.length > 0 && (
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Work Experience</h2>
-              <div className="space-y-4">
+              <h2
+                className={styles.sectionTitle}
+                style={selectedTemplate === 'yash-template' ? { fontSize: fontStyles.sectionSize, marginBottom: '3px' } : {}}
+              >
+                Work Experience
+              </h2>
+              <div className={selectedTemplate === 'yash-template' ? 'space-y-2' : 'space-y-4'}>
                 {experiences.map((exp) => (
                   <div key={exp.id}>
-                    <h3 className="font-semibold">{exp.position || 'Position'}</h3>
-                    <p className="text-gray-600 font-medium">{exp.company || 'Company'}</p>
-                    <p className="text-sm text-gray-500 italic">{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</p>
+                    <h3 className={selectedTemplate === 'yash-template' ? 'font-semibold text-sm' : 'font-semibold'}>
+                      {exp.position || 'Position'}
+                    </h3>
+                    <p className={selectedTemplate === 'yash-template' ? 'text-gray-600 font-medium text-xs' : 'text-gray-600 font-medium'}>
+                      {exp.company || 'Company'}
+                    </p>
+                    <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-500 italic' : 'text-sm text-gray-500 italic'}>
+                      {exp.startDate} - {exp.current ? 'Present' : exp.endDate}
+                    </p>
                     {exp.description && (
-                      <div className="text-sm text-gray-700 mt-2">
+                      <div className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-700 mt-1' : 'text-sm text-gray-700 mt-2'}>
                         {exp.description.split('\n').map((line, index) => (
-                          <p key={index} className="mb-1">{line}</p>
+                          <p key={index} className={selectedTemplate === 'yash-template' ? 'mb-0.5' : 'mb-1'}>{line}</p>
                         ))}
                       </div>
                     )}
@@ -911,17 +1308,30 @@ export default function ResumeBuilder() {
           {/* Education */}
           {education.length > 0 && (
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Education</h2>
-              <div className="space-y-4">
+              <h2
+                className={styles.sectionTitle}
+                style={selectedTemplate === 'yash-template' ? { fontSize: fontStyles.sectionSize, marginBottom: '3px' } : {}}
+              >
+                Education
+              </h2>
+              <div className={selectedTemplate === 'yash-template' ? 'space-y-1' : 'space-y-4'}>
                 {education.map((edu) => (
                   <div key={edu.id}>
-                    <h3 className="font-semibold">
+                    <h3 className={selectedTemplate === 'yash-template' ? 'font-semibold text-sm' : 'font-semibold'}>
                       {edu.degree || 'Degree'} {edu.field && `in ${edu.field}`}
                     </h3>
-                    <p className="text-gray-600">{edu.institution || 'Institution'}</p>
+                    <p className={selectedTemplate === 'yash-template' ? 'text-gray-600 text-xs' : 'text-gray-600'}>
+                      {edu.institution || 'Institution'}
+                    </p>
                     <div className="flex justify-between items-center">
-                      <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate}</p>
-                      {edu.gpa && <p className="text-sm text-gray-500">GPA: {edu.gpa}</p>}
+                      <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-500' : 'text-sm text-gray-500'}>
+                        {edu.startDate} - {edu.endDate}
+                      </p>
+                      {edu.gpa && (
+                        <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-500' : 'text-sm text-gray-500'}>
+                          GPA: {edu.gpa}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -932,12 +1342,159 @@ export default function ResumeBuilder() {
           {/* Skills */}
           {skills.length > 0 && (
             <div className={styles.section}>
-              <h2 className={styles.sectionTitle}>Skills</h2>
-              <div className="flex flex-wrap gap-2">
-                {skills.filter(skill => skill.trim()).map((skill, index) => (
-                  <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-                    {skill}
-                  </span>
+              <h2
+                className={styles.sectionTitle}
+                style={selectedTemplate === 'yash-template' ? { fontSize: fontStyles.sectionSize } : {}}
+              >
+                {selectedTemplate === 'yash-template' ? 'Technical Skills' : 'Skills'}
+              </h2>
+              {selectedTemplate === 'yash-template' ? (
+                // Developer template - categorized skills
+                <div className="space-y-2">
+                  <div>
+                    <span className="font-semibold text-gray-800">Technical Skills: </span>
+                    <span className="text-gray-700">
+                      {skills.filter(skill => skill.trim()).join(', ')}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                // Other templates - tag format
+                <div className="flex flex-wrap gap-2">
+                  {skills.filter(skill => skill.trim()).map((skill, index) => (
+                    <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Projects */}
+          {projects.length > 0 && (
+            <div className={styles.section}>
+              <h2
+                className={styles.sectionTitle}
+                style={selectedTemplate === 'yash-template' ? { fontSize: fontStyles.sectionSize, marginBottom: '3px' } : {}}
+              >
+                Projects
+              </h2>
+              <div className={selectedTemplate === 'yash-template' ? 'space-y-2' : 'space-y-4'}>
+                {projects.map((project) => (
+                  <div key={project.id}>
+                    <h3 className={selectedTemplate === 'yash-template' ? 'font-semibold text-sm' : 'font-semibold'}>
+                      {project.name || 'Project Name'}
+                    </h3>
+                    {project.technologies && (
+                      <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-600 italic' : 'text-sm text-gray-600 italic'}>
+                        Technologies: {project.technologies}
+                      </p>
+                    )}
+                    {(project.startDate || project.endDate) && (
+                      <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-500' : 'text-sm text-gray-500'}>
+                        {project.startDate} - {project.endDate}
+                      </p>
+                    )}
+                    {project.description && (
+                      <div className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-700 mt-1' : 'text-sm text-gray-700 mt-1'}>
+                        {project.description.split('\n').map((line, index) => (
+                          <p key={index} className={selectedTemplate === 'yash-template' ? 'mb-0.5' : 'mb-1'}>{line}</p>
+                        ))}
+                      </div>
+                    )}
+                    {project.link && (
+                      <p className={selectedTemplate === 'yash-template' ? 'text-xs text-blue-600 mt-1' : 'text-sm text-blue-600 mt-1'}>
+                        🔗 {project.link}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Certifications */}
+          {certifications.length > 0 && (
+            <div className={styles.section}>
+              <h2
+                className={styles.sectionTitle}
+                style={selectedTemplate === 'yash-template' ? { fontSize: fontStyles.sectionSize, marginBottom: '3px' } : {}}
+              >
+                Certifications
+              </h2>
+              <div className={selectedTemplate === 'yash-template' ? 'space-y-1' : 'space-y-3'}>
+                {certifications.map((cert) => (
+                  <div key={cert.id}>
+                    <h3 className={selectedTemplate === 'yash-template' ? 'font-semibold text-sm' : 'font-semibold'}>
+                      {cert.name || 'Certification Name'}
+                    </h3>
+                    <p className={selectedTemplate === 'yash-template' ? 'text-gray-600 text-xs' : 'text-gray-600'}>
+                      {cert.issuer || 'Issuing Organization'}
+                    </p>
+                    {cert.date && (
+                      <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-500' : 'text-sm text-gray-500'}>
+                        {cert.date}
+                      </p>
+                    )}
+                    {cert.credentialId && (
+                      <p className={selectedTemplate === 'yash-template' ? 'text-xs text-gray-500' : 'text-xs text-gray-500'}>
+                        Credential ID: {cert.credentialId}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Awards */}
+          {awards.length > 0 && (
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Awards & Honors</h2>
+              <div className="space-y-2">
+                {awards.map((award) => (
+                  <div key={award.id} className="flex justify-between items-center">
+                    <div>
+                      <span className="font-semibold">{award.title || 'Award Title'}</span>
+                      <span className="text-gray-600 ml-2">- {award.issuer || 'Organization'}</span>
+                    </div>
+                    {award.date && <span className="text-sm text-gray-500">{award.date}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Languages */}
+          {languages.length > 0 && (
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Languages</h2>
+              <div className="space-y-1">
+                {languages.map((lang) => (
+                  <div key={lang.id} className="flex justify-between items-center">
+                    <span className="font-medium">{lang.name || 'Language'}</span>
+                    <span className="text-sm text-gray-600">{lang.proficiency}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Volunteer Experience */}
+          {volunteer.length > 0 && (
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>Volunteer Experience</h2>
+              <div className="space-y-4">
+                {volunteer.map((vol) => (
+                  <div key={vol.id}>
+                    <h3 className="font-semibold">{vol.role || 'Volunteer Role'}</h3>
+                    <p className="text-gray-600 font-medium">{vol.organization || 'Organization'}</p>
+                    <p className="text-sm text-gray-500 italic">{vol.startDate} - {vol.current ? 'Present' : vol.endDate}</p>
+                    {vol.description && (
+                      <p className="text-sm text-gray-700 mt-1">{vol.description}</p>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
@@ -1221,8 +1778,351 @@ export default function ResumeBuilder() {
           </div>
         );
       case 6:
-        return renderTemplateStep();
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Projects</h2>
+              <button onClick={addProject} className="btn-primary">
+                + Add Project
+              </button>
+            </div>
+
+            {projects.length === 0 ? (
+              <div className="text-center py-8 bg-gray-50 rounded-lg">
+                <p className="text-gray-600 mb-4">No projects added yet.</p>
+                <button onClick={addProject} className="btn-primary">
+                  Add Your First Project
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {projects.map((project, index) => (
+                  <div key={project.id} className="bg-gray-50 rounded-lg p-6 border">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold">Project #{index + 1}</h3>
+                      <button
+                        onClick={() => removeProject(project.id)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        🗑️ Remove
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="form-label">Project Name *</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={project.name}
+                          onChange={(e) => updateProject(project.id, 'name', e.target.value)}
+                          placeholder="Resume Builder App"
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Technologies Used</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={project.technologies}
+                          onChange={(e) => updateProject(project.id, 'technologies', e.target.value)}
+                          placeholder="React, Node.js, MongoDB"
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Start Date</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={project.startDate || ''}
+                          onChange={(e) => updateProject(project.id, 'startDate', e.target.value)}
+                          placeholder="Jan 2024"
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">End Date</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={project.endDate || ''}
+                          onChange={(e) => updateProject(project.id, 'endDate', e.target.value)}
+                          placeholder="Mar 2024"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="form-label">Project Link (Optional)</label>
+                        <input
+                          type="url"
+                          className="form-input"
+                          value={project.link || ''}
+                          onChange={(e) => updateProject(project.id, 'link', e.target.value)}
+                          placeholder="https://github.com/username/project"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <label className="form-label">Project Description</label>
+                      <textarea
+                        className="form-input h-32"
+                        value={project.description}
+                        onChange={(e) => updateProject(project.id, 'description', e.target.value)}
+                        placeholder="• Built a full-stack resume builder with React and Node.js&#10;• Implemented PDF export functionality using html2pdf.js&#10;• Designed responsive UI with Tailwind CSS&#10;• Integrated MongoDB for data persistence"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        💡 Tip: Describe the project's purpose, your role, technologies used, and key achievements.
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
       case 7:
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Certifications</h2>
+              <button onClick={addCertification} className="btn-primary">
+                + Add Certification
+              </button>
+            </div>
+
+            {certifications.length === 0 ? (
+              <div className="text-center py-8 bg-gray-50 rounded-lg">
+                <p className="text-gray-600 mb-4">No certifications added yet.</p>
+                <button onClick={addCertification} className="btn-primary">
+                  Add Your First Certification
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {certifications.map((cert, index) => (
+                  <div key={cert.id} className="bg-gray-50 rounded-lg p-6 border">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold">Certification #{index + 1}</h3>
+                      <button
+                        onClick={() => removeCertification(cert.id)}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        🗑️ Remove
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="form-label">Certification Name *</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={cert.name}
+                          onChange={(e) => updateCertification(cert.id, 'name', e.target.value)}
+                          placeholder="AWS Certified Solutions Architect"
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Issuing Organization *</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={cert.issuer}
+                          onChange={(e) => updateCertification(cert.id, 'issuer', e.target.value)}
+                          placeholder="Amazon Web Services"
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Date Obtained</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={cert.date}
+                          onChange={(e) => updateCertification(cert.id, 'date', e.target.value)}
+                          placeholder="March 2024"
+                        />
+                      </div>
+                      <div>
+                        <label className="form-label">Credential ID (Optional)</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={cert.credentialId || ''}
+                          onChange={(e) => updateCertification(cert.id, 'credentialId', e.target.value)}
+                          placeholder="ABC123456789"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="form-label">Verification Link (Optional)</label>
+                        <input
+                          type="url"
+                          className="form-input"
+                          value={cert.link || ''}
+                          onChange={(e) => updateCertification(cert.id, 'link', e.target.value)}
+                          placeholder="https://verify.certification.com/abc123"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      case 8:
+        return (
+          <div className="space-y-8">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Additional Sections</h2>
+
+            {/* Awards Section */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-gray-800">Awards & Honors</h3>
+                <button onClick={addAward} className="btn-secondary text-sm">
+                  + Add Award
+                </button>
+              </div>
+
+              {awards.map((award, index) => (
+                <div key={award.id} className="bg-gray-50 rounded-lg p-4 border">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-medium">Award #{index + 1}</span>
+                    <button onClick={() => removeAward(award.id)} className="text-red-600 text-sm">🗑️</button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={award.title}
+                      onChange={(e) => updateAward(award.id, 'title', e.target.value)}
+                      placeholder="Award Title"
+                    />
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={award.issuer}
+                      onChange={(e) => updateAward(award.id, 'issuer', e.target.value)}
+                      placeholder="Issuing Organization"
+                    />
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={award.date}
+                      onChange={(e) => updateAward(award.id, 'date', e.target.value)}
+                      placeholder="Date"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Languages Section */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-gray-800">Languages</h3>
+                <button onClick={addLanguage} className="btn-secondary text-sm">
+                  + Add Language
+                </button>
+              </div>
+
+              {languages.map((lang, index) => (
+                <div key={lang.id} className="bg-gray-50 rounded-lg p-4 border">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-medium">Language #{index + 1}</span>
+                    <button onClick={() => removeLanguage(lang.id)} className="text-red-600 text-sm">🗑️</button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={lang.name}
+                      onChange={(e) => updateLanguage(lang.id, 'name', e.target.value)}
+                      placeholder="Language Name"
+                    />
+                    <select
+                      className="form-input"
+                      value={lang.proficiency}
+                      onChange={(e) => updateLanguage(lang.id, 'proficiency', e.target.value)}
+                    >
+                      <option value="Beginner">Beginner</option>
+                      <option value="Intermediate">Intermediate</option>
+                      <option value="Advanced">Advanced</option>
+                      <option value="Fluent">Fluent</option>
+                      <option value="Native">Native</option>
+                    </select>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Volunteer Experience Section */}
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold text-gray-800">Volunteer Experience</h3>
+                <button onClick={addVolunteer} className="btn-secondary text-sm">
+                  + Add Volunteer Work
+                </button>
+              </div>
+
+              {volunteer.map((vol, index) => (
+                <div key={vol.id} className="bg-gray-50 rounded-lg p-4 border">
+                  <div className="flex justify-between items-center mb-3">
+                    <span className="font-medium">Volunteer #{index + 1}</span>
+                    <button onClick={() => removeVolunteer(vol.id)} className="text-red-600 text-sm">🗑️</button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={vol.organization}
+                      onChange={(e) => updateVolunteer(vol.id, 'organization', e.target.value)}
+                      placeholder="Organization"
+                    />
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={vol.role}
+                      onChange={(e) => updateVolunteer(vol.id, 'role', e.target.value)}
+                      placeholder="Role/Position"
+                    />
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={vol.startDate}
+                      onChange={(e) => updateVolunteer(vol.id, 'startDate', e.target.value)}
+                      placeholder="Start Date"
+                    />
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={vol.endDate}
+                      onChange={(e) => updateVolunteer(vol.id, 'endDate', e.target.value)}
+                      placeholder="End Date"
+                      disabled={vol.current}
+                    />
+                  </div>
+                  <label className="flex items-center mb-3">
+                    <input
+                      type="checkbox"
+                      checked={vol.current}
+                      onChange={(e) => updateVolunteer(vol.id, 'current', e.target.checked)}
+                      className="mr-2"
+                    />
+                    <span className="text-sm">Currently volunteering here</span>
+                  </label>
+                  <textarea
+                    className="form-input h-20"
+                    value={vol.description}
+                    onChange={(e) => updateVolunteer(vol.id, 'description', e.target.value)}
+                    placeholder="Describe your volunteer work and impact..."
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 9:
+        return renderTemplateStep();
+      case 10:
         return (
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -1241,6 +2141,15 @@ export default function ResumeBuilder() {
                 >
                   {isExporting ? '⏳ Generating...' : '📄 Export as PDF'}
                 </button>
+                {selectedTemplate === 'yash-template' && (
+                  <button
+                    onClick={exportToWord}
+                    disabled={isExporting}
+                    className="btn-primary bg-blue-600 hover:bg-blue-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isExporting ? '⏳ Generating...' : '📝 Export as Word'}
+                  </button>
+                )}
               </div>
             </div>
 
@@ -1256,6 +2165,31 @@ export default function ResumeBuilder() {
                   ✅ Saved to database (ID: {currentResumeId.slice(-8)})
                 </p>
               )}
+            </div>
+
+            {/* Developer Section */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="text-2xl">👨‍💻</div>
+                <div>
+                  <h4 className="font-semibold text-blue-900">Developer Information</h4>
+                  <p className="text-blue-600 text-sm">Resume Builder Creator</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <p className="text-blue-700 text-sm">
+                  <strong>Developer:</strong> Yash Gaur
+                </p>
+                <p className="text-blue-700 text-sm">
+                  <strong>Email:</strong>
+                  <a href="mailto:theyash968@gmail.com" className="text-blue-600 hover:text-blue-800 underline ml-1">
+                    theyash968@gmail.com
+                  </a>
+                </p>
+                <p className="text-blue-600 text-xs mt-3">
+                  💡 This Resume Builder was developed by Yash Gaur. For support, feedback, or custom features, feel free to reach out!
+                </p>
+              </div>
             </div>
 
             {renderPreview()}
